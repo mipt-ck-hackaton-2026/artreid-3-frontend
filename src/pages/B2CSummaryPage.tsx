@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { slaApi } from '../api';
 import type { B2CSummaryResponseDTO, ManagerB2CSlaResponseDTO } from '../api/types';
 import { MetricCard, ComparisonChart } from '../components/DashboardComponents';
@@ -15,7 +15,7 @@ const B2CSummaryPage: React.FC = () => {
     qualification: ''
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const params = {
@@ -31,16 +31,16 @@ const B2CSummaryPage: React.FC = () => {
       setSummary(sumRes.data);
       setManagers(mgrRes.data);
       setError(null);
-    } catch (err) {
+    } catch {
       setError('Failed to load B2C metrics');
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleApplyFilters = (e: React.FormEvent) => {
     e.preventDefault();

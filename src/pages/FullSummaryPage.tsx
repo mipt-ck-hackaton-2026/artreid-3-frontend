@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { slaApi } from '../api';
 import type { FullSummaryResponseDTO } from '../api/types';
 import { MetricCard, BreachDistributionChart } from '../components/DashboardComponents';
@@ -12,22 +12,22 @@ const FullSummaryPage: React.FC = () => {
     dateTo: ''
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const response = await slaApi.getFullSummary(filters.dateFrom || undefined, filters.dateTo || undefined);
       setData(response.data);
       setError(null);
-    } catch (err) {
+    } catch {
       setError('Failed to load summary data');
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters.dateFrom, filters.dateTo]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleApplyFilters = (e: React.FormEvent) => {
     e.preventDefault();

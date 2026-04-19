@@ -1,6 +1,7 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { dataApi } from '../api';
-import type { DataLoadResponseDTO } from '../api/types';
+import type { DataLoadResponseDTO, ErrorResponse } from '../api/types';
 import '../components/Layout.css';
 
 const DataLoadPage: React.FC = () => {
@@ -26,8 +27,12 @@ const DataLoadPage: React.FC = () => {
     try {
       const response = await dataApi.load(file);
       setResult(response.data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to upload file');
+    } catch (err: unknown) {
+      if (axios.isAxiosError<ErrorResponse>(err)) {
+        setError(err.response?.data?.message || 'Failed to upload file');
+      } else {
+        setError('An unexpected error occurred');
+      }
     } finally {
       setLoading(false);
     }

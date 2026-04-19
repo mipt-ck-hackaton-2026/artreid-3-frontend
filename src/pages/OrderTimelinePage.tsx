@@ -1,6 +1,7 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { orderApi } from '../api';
-import type { OrderTimelineResponseDTO } from '../api/types';
+import type { OrderTimelineResponseDTO, ErrorResponse } from '../api/types';
 import '../components/Layout.css';
 
 const OrderTimelinePage: React.FC = () => {
@@ -19,8 +20,12 @@ const OrderTimelinePage: React.FC = () => {
     try {
       const response = await orderApi.getTimeline(leadId);
       setTimeline(response.data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Order not found or failed to fetch timeline');
+    } catch (err: unknown) {
+      if (axios.isAxiosError<ErrorResponse>(err)) {
+        setError(err.response?.data?.message || 'Order not found or failed to fetch timeline');
+      } else {
+        setError('An unexpected error occurred');
+      }
     } finally {
       setLoading(false);
     }

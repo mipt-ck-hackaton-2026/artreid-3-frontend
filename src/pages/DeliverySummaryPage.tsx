@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { slaApi } from '../api';
 import type { DeliverySummaryResponseDTO, ManagerDeliverySlaResponseDTO } from '../api/types';
 import { MetricCard, ComparisonChart } from '../components/DashboardComponents';
@@ -16,7 +16,7 @@ const DeliverySummaryPage: React.FC = () => {
     deliveryService: ''
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const params = {
@@ -33,16 +33,16 @@ const DeliverySummaryPage: React.FC = () => {
       setSummary(sumRes.data);
       setManagers(mgrRes.data);
       setError(null);
-    } catch (err) {
+    } catch {
       setError('Failed to load delivery metrics');
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleApplyFilters = (e: React.FormEvent) => {
     e.preventDefault();
