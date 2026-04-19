@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { slaApi } from '../api';
 import type { DeliverySummaryResponseDTO, ManagerDeliverySlaResponseDTO } from '../api/types';
 import { MetricCard, ComparisonChart } from '../components/DashboardComponents';
@@ -15,38 +15,44 @@ const DeliverySummaryPage: React.FC = () => {
     qualification: '',
     deliveryService: ''
   });
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = {
-        dateFrom: filters.dateFrom ? new Date(filters.dateFrom).toISOString() : undefined,
-        dateTo: filters.dateTo ? new Date(filters.dateTo).toISOString() : undefined,
-        managerId: filters.managerId || undefined,
-        qualification: filters.qualification || undefined,
-        deliveryService: filters.deliveryService || undefined
-      };
-      const [sumRes, mgrRes] = await Promise.all([
-        slaApi.getDeliverySummary(params),
-        slaApi.getDeliveryByManager(params)
-      ]);
-      setSummary(sumRes.data);
-      setManagers(mgrRes.data);
-      setError(null);
-    } catch {
-      setError('Failed to load delivery metrics');
-    } finally {
-      setLoading(false);
-    }
-  }, [filters]);
+  const [activeFilters, setActiveFilters] = useState(filters);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    let ignore = false;
+    const params = {
+      dateFrom: activeFilters.dateFrom ? new Date(activeFilters.dateFrom).toISOString() : undefined,
+      dateTo: activeFilters.dateTo ? new Date(activeFilters.dateTo).toISOString() : undefined,
+      managerId: activeFilters.managerId || undefined,
+      qualification: activeFilters.qualification || undefined,
+      deliveryService: activeFilters.deliveryService || undefined
+    };
+
+    Promise.all([
+      slaApi.getDeliverySummary(params),
+      slaApi.getDeliveryByManager(params)
+    ]).then(([sumRes, mgrRes]) => {
+      if (!ignore) {
+        setSummary(sumRes.data);
+        setManagers(mgrRes.data);
+        setError(null);
+        setLoading(false);
+      }
+    }).catch(() => {
+      if (!ignore) {
+        setError('Failed to load delivery metrics');
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      ignore = true;
+    };
+  }, [activeFilters]);
 
   const handleApplyFilters = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchData();
+    setLoading(true);
+    setActiveFilters({ ...filters });
   };
 
   if (loading && !summary) return <div className="page-header"><h2>Delivery Metrics</h2><p>Loading analytics...</p></div>;

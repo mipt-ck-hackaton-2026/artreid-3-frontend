@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { slaApi } from '../api';
 import type { B2CSummaryResponseDTO, ManagerB2CSlaResponseDTO } from '../api/types';
 import { MetricCard, ComparisonChart } from '../components/DashboardComponents';
@@ -14,37 +14,43 @@ const B2CSummaryPage: React.FC = () => {
     managerId: '',
     qualification: ''
   });
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = {
-        dateFrom: filters.dateFrom || undefined,
-        dateTo: filters.dateTo || undefined,
-        managerId: filters.managerId || undefined,
-        qualification: filters.qualification || undefined
-      };
-      const [sumRes, mgrRes] = await Promise.all([
-        slaApi.getB2CSummary(params),
-        slaApi.getB2CByManager(params)
-      ]);
-      setSummary(sumRes.data);
-      setManagers(mgrRes.data);
-      setError(null);
-    } catch {
-      setError('Failed to load B2C metrics');
-    } finally {
-      setLoading(false);
-    }
-  }, [filters]);
+  const [activeFilters, setActiveFilters] = useState(filters);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    let ignore = false;
+    const params = {
+      dateFrom: activeFilters.dateFrom || undefined,
+      dateTo: activeFilters.dateTo || undefined,
+      managerId: activeFilters.managerId || undefined,
+      qualification: activeFilters.qualification || undefined
+    };
+
+    Promise.all([
+      slaApi.getB2CSummary(params),
+      slaApi.getB2CByManager(params)
+    ]).then(([sumRes, mgrRes]) => {
+      if (!ignore) {
+        setSummary(sumRes.data);
+        setManagers(mgrRes.data);
+        setError(null);
+        setLoading(false);
+      }
+    }).catch(() => {
+      if (!ignore) {
+        setError('Failed to load B2C metrics');
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      ignore = true;
+    };
+  }, [activeFilters]);
 
   const handleApplyFilters = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchData();
+    setLoading(true);
+    setActiveFilters({ ...filters });
   };
 
   if (loading && !summary) return <div className="page-header"><h2>B2C Metrics</h2><p>Loading analytics...</p></div>;

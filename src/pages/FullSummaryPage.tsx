@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { slaApi } from '../api';
 import type { FullSummaryResponseDTO } from '../api/types';
 import { MetricCard, BreachDistributionChart } from '../components/DashboardComponents';
@@ -11,27 +11,35 @@ const FullSummaryPage: React.FC = () => {
     dateFrom: '',
     dateTo: ''
   });
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await slaApi.getFullSummary(filters.dateFrom || undefined, filters.dateTo || undefined);
-      setData(response.data);
-      setError(null);
-    } catch {
-      setError('Failed to load summary data');
-    } finally {
-      setLoading(false);
-    }
-  }, [filters.dateFrom, filters.dateTo]);
+  const [activeFilters, setActiveFilters] = useState(filters);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    let ignore = false;
+    
+    slaApi.getFullSummary(activeFilters.dateFrom || undefined, activeFilters.dateTo || undefined)
+      .then(response => {
+        if (!ignore) {
+          setData(response.data);
+          setError(null);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setError('Failed to load summary data');
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [activeFilters]);
 
   const handleApplyFilters = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchData();
+    setLoading(true);
+    setActiveFilters({ ...filters });
   };
 
   if (loading && !data) return <div className="page-header"><h2>Full Summary</h2><p>Loading analytics...</p></div>;
