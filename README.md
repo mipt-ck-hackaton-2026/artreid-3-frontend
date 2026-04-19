@@ -1,75 +1,75 @@
-# React + TypeScript + Vite
+# SLA Analytics Dashboard 📊
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Современный фронтенд-интерфейс для визуализации и анализа показателей SLA (Service Level Agreement) заказов. Проект интегрируется с бекенд-сервисом для предоставления детальной аналитики по этапам жизненного цикла заказов в CRM.
 
-Currently, two official plugins are available:
+## ✨ Основные возможности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **📊 Интерактивные дашборды**:
+  - **Full Summary**: Общий обзор выполнения SLA по всему циклу.
+  - **B2C Metrics**: Детальный анализ этапов реакции, сборки и передачи в доставку.
+  - **Delivery Metrics**: Анализ времени доставки до ПВЗ и времени хранения.
+- **🔍 Детальный таймлайн заказа**: Поиск по Lead ID с визуализацией каждого этапа и автоматической подсветкой нарушений SLA.
+- **⚡ Умные фильтры**: Автодополнение (Autocomplete) для менеджеров, квалификаций и служб доставки с оптимизацией нагрузки (Debounce, AbortController).
+- **🌙 Адаптивная тема**: Автоматическое определение системной темы (светлая/темная) с возможностью ручного переключения.
+- **📥 Импорт данных**: Загрузка CSV-выгрузок из CRM с выводом статистики синхронизации.
+- **📈 Визуализация на Chart.js**: Четкие и производительные графики распределения нарушений и сравнения эффективности менеджеров.
 
-## React Compiler
+## 🛠 Технологический стек
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- **Framework**: React 19 + TypeScript
+- **Build Tool**: Vite 8
+- **Charts**: Chart.js + react-chartjs-2
+- **Routing**: React Router 7
+- **Styling**: Vanilla CSS (CSS Variables)
+- **API Client**: Axios
+- **Testing**: Vitest + React Testing Library
 
-Note: This will impact Vite dev & build performances.
+## 🚀 Быстрый старт
 
-## Expanding the ESLint configuration
+### Требования
+- Node.js 24+
+- Бекенд сервис запущен на `http://localhost:8080` (настраивается в `.env`)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Установка и запуск
+1. Клонируйте репозиторий
+2. Установите зависимости:
+   ```bash
+   npm install
+   ```
+3. Создайте `.env` файл (или используйте значения по умолчанию):
+   ```env
+   VITE_API_URL=http://localhost:8080
+   ```
+4. Запустите проект в режиме разработки:
+   ```bash
+   npm run dev
+   ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🏗 CI/CD и релизы
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Проект полностью автоматизирован с использованием GitHub Actions:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Lint & Test**: Проверка качества кода и запуск 12+ модульных тестов при каждом Pull Request.
+- **Semantic Release**: Автоматическое управление версиями на основе коммитов (Conventional Commits) и публикация в GitHub Packages.
+- **Docker**: Сборка ультра-легковесного образа на базе `node:alpine` и публикация в GHCR (`ghcr.io`). Образы тегируются в строгом соответствии с версией релиза.
+
+## 🐳 Docker
+
+Запуск готового образа:
+```bash
+docker run -p 3000:3000 ghcr.io/mipt-ck-hackaton-2026/artreid-3-frontend:latest
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧪 Тестирование
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Запуск тестов:
+```bash
+npm test
 ```
+Проверка линтером:
+```bash
+npm run lint
+```
+
+---
+Разработано в рамках хакатона MIPT CK 2026.
