@@ -3,6 +3,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import FullSummaryPage from '../pages/FullSummaryPage'
 import { slaApi } from '../api'
 import { ThemeProvider } from '../context/ThemeProvider'
+import type { AxiosResponse } from 'axios'
+import type { FullSummaryResponseDTO } from '../api/types'
 
 vi.mock('../api', () => ({
   slaApi: {
@@ -31,7 +33,7 @@ describe('FullSummaryPage', () => {
   })
 
   it('should render data when API succeeds', async () => {
-    const mockData = {
+    const mockData: Partial<AxiosResponse<FullSummaryResponseDTO>> = {
       data: {
         period: { from: '2023-01-01', to: '2023-01-31' },
         pipeline: 'B2C',
@@ -45,12 +47,16 @@ describe('FullSummaryPage', () => {
             breach_distribution: {
               metadata: { unit: 'MINUTES', total_count: 15 },
               items: []
-            }
+            },
+            threshold_minutes: 0,
+            breach_count: 0,
+            breach_percent: 0,
+            median_minutes: 0
           }
         }
       }
     }
-    vi.mocked(slaApi.getFullSummary).mockResolvedValue(mockData as any)
+    vi.mocked(slaApi.getFullSummary).mockResolvedValue(mockData as AxiosResponse<FullSummaryResponseDTO>)
 
     render(
       <ThemeProvider>

@@ -3,6 +3,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import DeliverySummaryPage from '../pages/DeliverySummaryPage'
 import { slaApi } from '../api'
 import { ThemeProvider } from '../context/ThemeProvider'
+import type { AxiosResponse } from 'axios'
+import type { DeliverySummaryResponseDTO, ManagerDeliverySlaResponseDTO } from '../api/types'
 
 vi.mock('../api', () => ({
   slaApi: {
@@ -21,20 +23,27 @@ describe('DeliverySummaryPage', () => {
   })
 
   it('should render metrics when API succeeds', async () => {
-    const mockSummary = {
+    const mockSummary: Partial<AxiosResponse<DeliverySummaryResponseDTO>> = {
       data: {
         period: { from: '2023-01-01', to: '2023-01-31' },
+        pipeline: 'B2C',
         metrics: {
-          sla4_to_pvz: { met_percent: 92, met_count: 92, total_orders: 100, avg_minutes: 1440, p90_minutes: 2880, breach_distribution: { items: [], metadata: { unit: 'd', total_count: 8 } } },
-          sla5_at_pvz: { met_percent: 88, met_count: 88, total_orders: 100, avg_minutes: 720, p90_minutes: 1440, breach_distribution: { items: [], metadata: { unit: 'd', total_count: 12 } } },
-          delivery_total: { met_percent: 90, met_count: 90, total_orders: 100, avg_minutes: 2160, p90_minutes: 4320, breach_distribution: { items: [], metadata: { unit: 'd', total_count: 10 } } }
+          sla4_to_pvz: { met_percent: 92, met_count: 92, total_orders: 100, avg_minutes: 1440, p90_minutes: 2880, breach_distribution: { items: [], metadata: { unit: 'd', total_count: 8 } }, threshold_minutes: 0, breach_count: 0, breach_percent: 0, median_minutes: 0 },
+          sla5_at_pvz: { met_percent: 88, met_count: 88, total_orders: 100, avg_minutes: 720, p90_minutes: 1440, breach_distribution: { items: [], metadata: { unit: 'd', total_count: 12 } }, threshold_minutes: 0, breach_count: 0, breach_percent: 0, median_minutes: 0 },
+          delivery_total: { met_percent: 90, met_count: 90, total_orders: 100, avg_minutes: 2160, p90_minutes: 4320, breach_distribution: { items: [], metadata: { unit: 'd', total_count: 10 } }, threshold_minutes: 0, breach_count: 0, breach_percent: 0, median_minutes: 0 }
         }
       }
     }
-    const mockManagers = { data: { data: [] } }
+    const mockManagers: Partial<AxiosResponse<ManagerDeliverySlaResponseDTO>> = { 
+      data: { 
+        data: [],
+        period: { from: '2023-01-01', to: '2023-01-31' },
+        pipeline: 'B2C'
+      } 
+    }
 
-    vi.mocked(slaApi.getDeliverySummary).mockResolvedValue(mockSummary as any)
-    vi.mocked(slaApi.getDeliveryByManager).mockResolvedValue(mockManagers as any)
+    vi.mocked(slaApi.getDeliverySummary).mockResolvedValue(mockSummary as AxiosResponse<DeliverySummaryResponseDTO>)
+    vi.mocked(slaApi.getDeliveryByManager).mockResolvedValue(mockManagers as AxiosResponse<ManagerDeliverySlaResponseDTO>)
 
     render(
       <ThemeProvider>

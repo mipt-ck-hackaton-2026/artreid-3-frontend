@@ -1,15 +1,16 @@
-import axios from 'axios'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import OrderTimelinePage from '../pages/OrderTimelinePage'
 import { orderApi } from '../api'
+import type { AxiosResponse } from 'axios'
+import type { OrderTimelineResponseDTO } from '../api/types'
 
 vi.mock('axios', async (importOriginal) => {
-  const actual = await importOriginal() as any
+  const actual = await importOriginal() as Record<string, unknown>
   return {
     ...actual,
     default: {
-      ...actual.default,
+      ...(actual.default as Record<string, unknown>),
       isAxiosError: vi.fn().mockReturnValue(true),
     },
     isAxiosError: vi.fn().mockReturnValue(true),
@@ -30,7 +31,7 @@ describe('OrderTimelinePage', () => {
   })
 
   it('should show timeline when lead ID is analyzed', async () => {
-    const mockData = {
+    const mockData: Partial<AxiosResponse<OrderTimelineResponseDTO>> = {
       data: {
         pipeline: 'B2C',
         period: { from: '2023-01-01', to: '2023-01-31' },
@@ -56,7 +57,7 @@ describe('OrderTimelinePage', () => {
         ]
       }
     }
-    vi.mocked(orderApi.getTimeline).mockResolvedValue(mockData as any)
+    vi.mocked(orderApi.getTimeline).mockResolvedValue(mockData as AxiosResponse<OrderTimelineResponseDTO>)
 
     render(<OrderTimelinePage />)
     const input = screen.getByPlaceholderText('Enter Lead ID (e.g., 1234567)')

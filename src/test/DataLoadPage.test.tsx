@@ -1,15 +1,16 @@
-import axios from 'axios'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import DataLoadPage from '../pages/DataLoadPage'
 import { dataApi } from '../api'
+import type { AxiosResponse } from 'axios'
+import type { DataLoadResponseDTO } from '../api/types'
 
 vi.mock('axios', async (importOriginal) => {
-  const actual = await importOriginal() as any
+  const actual = await importOriginal() as Record<string, unknown>
   return {
     ...actual,
     default: {
-      ...actual.default,
+      ...(actual.default as Record<string, unknown>),
       isAxiosError: vi.fn().mockReturnValue(true),
     },
     isAxiosError: vi.fn().mockReturnValue(true),
@@ -41,7 +42,7 @@ describe('DataLoadPage', () => {
   })
 
   it('should show success message on successful upload', async () => {
-    const mockResponse = {
+    const mockResponse: Partial<AxiosResponse<DataLoadResponseDTO>> = {
       data: {
         loaded: 10,
         updated: 5,
@@ -49,7 +50,7 @@ describe('DataLoadPage', () => {
         errors: 0
       }
     }
-    vi.mocked(dataApi.load).mockResolvedValue(mockResponse as any)
+    vi.mocked(dataApi.load).mockResolvedValue(mockResponse as AxiosResponse<DataLoadResponseDTO>)
 
     render(<DataLoadPage />)
     const fileInput = screen.getByLabelText('Select CSV File')
