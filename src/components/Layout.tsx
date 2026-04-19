@@ -1,17 +1,9 @@
-import { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 import './Layout.css';
 
 const Layout: React.FC = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="layout">

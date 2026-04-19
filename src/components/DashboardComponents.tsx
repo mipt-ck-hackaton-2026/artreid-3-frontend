@@ -1,10 +1,41 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import { useTheme } from '../context/ThemeContext';
 import type { MetricDetails } from '../api/types';
+
+// Register ChartJS components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const getChartColors = (theme: 'light' | 'dark') => {
+  const isDark = theme === 'dark';
+  return {
+    text: isDark ? '#f7fafc' : '#1a1a1a',
+    muted: isDark ? '#a0aec0' : '#718096',
+    border: isDark ? '#4a5568' : '#e1e4e8',
+    tooltipBg: isDark ? '#2d3748' : '#ffffff',
+    tooltipBorder: isDark ? '#4a5568' : '#e2e8f0',
+  };
+};
 
 export const MetricCard: React.FC<{ title: string; metrics: MetricDetails }> = ({ title, metrics }) => {
   const metPercent = metrics.met_percent.toFixed(1);
-  const isHealthy = metrics.met_percent >= 80; // Example threshold
+  const isHealthy = metrics.met_percent >= 80;
 
   return (
     <div className="card metric-card">
@@ -38,67 +69,147 @@ export const MetricCard: React.FC<{ title: string; metrics: MetricDetails }> = (
 };
 
 export const BreachDistributionChart: React.FC<{ metrics: MetricDetails }> = ({ metrics }) => {
-  const data = metrics.breach_distribution.items.map(item => ({
-    name: item.max_bound === 2147483647 ? `>${item.min_bound}` : `${item.min_bound}-${item.max_bound}`,
-    count: item.count,
-    ratio: item.ratio * 100
-  }));
+  const { theme } = useTheme();
+  const colors = getChartColors(theme);
+  
+  const labels = metrics.breach_distribution.items.map(item => 
+    item.max_bound === 2147483647 ? `>${item.min_bound}` : `${item.min_bound}-${item.max_bound}`
+  );
+  
+  const counts = metrics.breach_distribution.items.map(item => item.count);
 
-  if (data.length === 0) return null;
+  if (labels.length === 0) return null;
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: 'Count',
+        data: counts,
+        backgroundColor: 'rgba(252, 129, 129, 0.7)',
+        borderColor: 'rgb(252, 129, 129)',
+        borderWidth: 1,
+        borderRadius: 4,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: colors.tooltipBg,
+        titleColor: colors.text,
+        bodyColor: colors.text,
+        borderColor: colors.tooltipBorder,
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: colors.border,
+        },
+        ticks: {
+          color: colors.muted,
+        },
+      },
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: colors.muted,
+        },
+      },
+    },
+  };
 
   return (
     <div className="card" style={{ height: '300px' }}>
-      <h3 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '16px' }}>BREACH DISTRIBUTION ({metrics.breach_distribution.metadata.unit})</h3>
-      <ResponsiveContainer width="100%" height="90%">
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" />
-          <XAxis dataKey="name" fontSize={12} stroke="var(--chart-axis)" />
-          <YAxis fontSize={12} stroke="var(--chart-axis)" />
-          <Tooltip 
-            formatter={(value: any) => [`${value} orders`, 'Count']}
-            contentStyle={{ 
-              backgroundColor: 'var(--chart-tooltip-bg)', 
-              borderColor: 'var(--chart-tooltip-border)', 
-              borderRadius: '8px', 
-              color: 'var(--text-main)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)' 
-            }}
-            itemStyle={{ color: 'var(--text-main)' }}
-          />
-          <Bar dataKey="count" fill="var(--chart-error)" radius={[4, 4, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
+      <h3 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
+        BREACH DISTRIBUTION ({metrics.breach_distribution.metadata.unit})
+      </h3>
+      <div style={{ height: 'calc(100% - 32px)' }}>
+        <Bar key={theme} data={chartData} options={options} />
+      </div>
     </div>
   );
 };
 
 export const ComparisonChart: React.FC<{ title: string; data: { name: string; value: number }[] }> = ({ title, data }) => {
+  const { theme } = useTheme();
+  const colors = getChartColors(theme);
+  const labels = data.map(d => d.name);
+  const values = data.map(d => d.value);
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: 'SLA Met (%)',
+        data: values,
+        backgroundColor: data.map(d => d.value >= 80 ? 'rgba(72, 187, 120, 0.7)' : 'rgba(246, 224, 94, 0.7)'),
+        borderColor: data.map(d => d.value >= 80 ? 'rgb(72, 187, 120)' : 'rgb(246, 224, 94)'),
+        borderWidth: 1,
+        borderRadius: 4,
+      },
+    ],
+  };
+
+  const options = {
+    indexAxis: 'y' as const,
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: colors.tooltipBg,
+        titleColor: colors.text,
+        bodyColor: colors.text,
+        borderColor: colors.tooltipBorder,
+        borderWidth: 1,
+        callbacks: {
+          label: (context: any) => `${context.parsed.x.toFixed(1)}%`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        max: 100,
+        grid: {
+          color: colors.border,
+        },
+        ticks: {
+          color: colors.muted,
+          callback: (value: any) => `${value}%`,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: colors.muted,
+        },
+      },
+    },
+  };
+
   return (
     <div className="card" style={{ height: '400px' }}>
       <h3 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '24px' }}>{title}</h3>
-      <ResponsiveContainer width="100%" height="90%">
-        <BarChart data={data} layout="vertical">
-          <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border-color)" />
-          <XAxis type="number" unit="%" hide />
-          <YAxis dataKey="name" type="category" width={100} fontSize={12} stroke="var(--chart-axis)" />
-          <Tooltip 
-            formatter={(value: any) => [`${value.toFixed(1)}%`, 'SLA Met']}
-            contentStyle={{ 
-              backgroundColor: 'var(--chart-tooltip-bg)', 
-              borderColor: 'var(--chart-tooltip-border)', 
-              borderRadius: '8px', 
-              color: 'var(--text-main)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)' 
-            }}
-            itemStyle={{ color: 'var(--text-main)' }}
-          />
-          <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.value >= 80 ? 'var(--chart-success)' : 'var(--chart-warning)'} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+      <div style={{ height: 'calc(100% - 40px)' }}>
+        <Bar key={theme} data={chartData} options={options} />
+      </div>
     </div>
   );
 };

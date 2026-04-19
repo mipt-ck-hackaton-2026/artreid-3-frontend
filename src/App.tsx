@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/Layout';
 import DataLoadPage from './pages/DataLoadPage';
 import FullSummaryPage from './pages/FullSummaryPage';
@@ -8,17 +9,19 @@ import OrderTimelinePage from './pages/OrderTimelinePage';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<FullSummaryPage />} />
-          <Route path="dashboard/b2c" element={<B2CSummaryPage />} />
-          <Route path="dashboard/delivery" element={<DeliverySummaryPage />} />
-          <Route path="orders" element={<OrderTimelinePage />} />
-          <Route path="upload" element={<DataLoadPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<FullSummaryPage />} />
+            <Route path="dashboard/b2c" element={<B2CSummaryPage />} />
+            <Route path="dashboard/delivery" element={<DeliverySummaryPage />} />
+            <Route path="orders" element={<OrderTimelinePage />} />
+            <Route path="upload" element={<DataLoadPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

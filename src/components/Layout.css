@@ -224,16 +224,60 @@ body {
   margin-top: 8px;
 }
 
-/* Inputs and Forms */
-input[type="file"],
-input[type="text"] {
-  background-color: var(--bg-card);
-  color: var(--text-main);
-  border-color: var(--border-color);
+/* Filters */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+  align-items: flex-end;
 }
 
-input[type="file"]:focus,
-input[type="text"]:focus {
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.filter-group input, 
+.filter-group select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.filter-group input:focus {
   outline: none;
   border-color: var(--primary);
+}
+
+.btn-apply {
+  padding: 8px 20px;
+  background-color: var(--primary);
+  color: var(--primary-text);
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  height: 38px;
+  transition: background-color 0.2s;
+}
+
+.btn-apply:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-apply:disabled {
+  background-color: var(--text-muted);
+  cursor: not-allowed;
 }
