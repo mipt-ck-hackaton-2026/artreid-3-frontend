@@ -7,9 +7,10 @@ import {
   Title,
   Tooltip,
   Legend,
+  type TooltipItem,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../hooks/useTheme';
 import type { MetricDetails } from '../api/types';
 
 // Register ChartJS components
@@ -177,7 +178,10 @@ export const ComparisonChart: React.FC<{ title: string; data: { name: string; va
         borderColor: colors.tooltipBorder,
         borderWidth: 1,
         callbacks: {
-          label: (context: any) => `${context.parsed.x.toFixed(1)}%`,
+          label: (context: TooltipItem<'bar'>) => {
+            const val = context.parsed.x;
+            return val !== null ? `${val.toFixed(1)}%` : '';
+          },
         },
       },
     },
@@ -190,7 +194,7 @@ export const ComparisonChart: React.FC<{ title: string; data: { name: string; va
         },
         ticks: {
           color: colors.muted,
-          callback: (value: any) => `${value}%`,
+          callback: (value: string | number) => `${value}%`,
         },
       },
       y: {

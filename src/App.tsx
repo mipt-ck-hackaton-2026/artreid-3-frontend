@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
+import { ThemeProvider } from './context/ThemeProvider';
 import Layout from './components/Layout';
 import DataLoadPage from './pages/DataLoadPage';
 import FullSummaryPage from './pages/FullSummaryPage';
