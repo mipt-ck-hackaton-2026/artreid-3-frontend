@@ -48,17 +48,19 @@ const OrderTimelinePage: React.FC = () => {
             style={{
               flexGrow: 1,
               padding: '12px',
-              border: '1px solid #e1e4e8',
+              border: '1px solid var(--border-color)',
               borderRadius: '8px',
-              fontSize: '1rem'
+              fontSize: '1rem',
+              backgroundColor: 'var(--bg-card)',
+              color: 'var(--text-main)'
             }}
           />
           <button
             type="submit"
             disabled={!leadId || loading}
             style={{
-              backgroundColor: '#3182ce',
-              color: 'white',
+              backgroundColor: 'var(--primary)',
+              color: 'var(--primary-text)',
               border: 'none',
               padding: '0 24px',
               borderRadius: '8px',
@@ -69,12 +71,12 @@ const OrderTimelinePage: React.FC = () => {
             {loading ? 'Searching...' : 'Analyze'}
           </button>
         </form>
-        {error && <p style={{ color: '#e53e3e', marginTop: '12px', fontSize: '0.9rem' }}>{error}</p>}
+        {error && <p style={{ color: 'var(--status-error-text)', marginTop: '12px', fontSize: '0.9rem' }}>{error}</p>}
       </div>
 
       {timeline && (
         <div className="timeline-container">
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '24px', color: 'var(--text-main)' }}>
             <strong>Pipeline:</strong> {timeline.pipeline} | 
             <strong> Period:</strong> {timeline.period.from} - {timeline.period.to}
           </div>
@@ -89,7 +91,7 @@ const OrderTimelinePage: React.FC = () => {
                       width: '16px', 
                       height: '16px', 
                       borderRadius: '50%', 
-                      backgroundColor: step.slaViolated ? '#fc8181' : '#68d391',
+                      backgroundColor: step.slaViolated ? 'var(--chart-error)' : 'var(--chart-success)',
                       zIndex: 2,
                       marginTop: '4px'
                     }} 
@@ -102,31 +104,31 @@ const OrderTimelinePage: React.FC = () => {
                         top: '20px', 
                         width: '2px', 
                         height: '100%', 
-                        backgroundColor: '#e2e8f0' 
+                        backgroundColor: 'var(--border-color)' 
                       }} 
                     />
                   )}
                 </div>
                 <div className="timeline-content card" style={{ flexGrow: 1, padding: '16px', marginTop: '-4px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <h4 style={{ margin: 0, color: '#2d3748' }}>{step.stage}</h4>
+                    <h4 style={{ margin: 0, color: 'var(--text-main)' }}>{step.stage}</h4>
                     {step.slaViolated && (
-                      <span style={{ fontSize: '0.75rem', padding: '2px 8px', backgroundColor: '#fff5f5', color: '#c53030', borderRadius: '4px', border: '1px solid #feb2b2', fontWeight: 700 }}>
+                      <span style={{ fontSize: '0.75rem', padding: '2px 8px', backgroundColor: 'var(--status-error-bg)', color: 'var(--status-error-text)', borderRadius: '4px', border: '1px solid var(--status-error-border)', fontWeight: 700 }}>
                         SLA BREACHED ({step.slaThreshold})
                       </span>
                     )}
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px', fontSize: '0.85rem', color: '#4a5568' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px', fontSize: '0.85rem', color: 'var(--text-link)' }}>
                     <div>
-                      <div style={{ color: '#a0aec0', marginBottom: '4px' }}>START</div>
+                      <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>START</div>
                       <div>{formatDate(step.startTime)}</div>
                     </div>
                     <div>
-                      <div style={{ color: '#a0aec0', marginBottom: '4px' }}>END</div>
+                      <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>END</div>
                       <div>{formatDate(step.endTime)}</div>
                     </div>
                     <div>
-                      <div style={{ color: '#a0aec0', marginBottom: '4px' }}>DURATION</div>
+                      <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>DURATION</div>
                       <div>{step.durationDays > 0 ? `${step.durationDays.toFixed(1)} days` : `${step.durationMinutes} mins`}</div>
                     </div>
                   </div>

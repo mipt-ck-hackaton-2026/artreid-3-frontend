@@ -55,9 +55,11 @@ const DataLoadPage: React.FC = () => {
                 display: 'block',
                 width: '100%',
                 padding: '12px',
-                border: '2px dashed #e1e4e8',
+                border: '2px dashed var(--border-color)',
                 borderRadius: '8px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                backgroundColor: 'var(--bg-card)',
+                color: 'var(--text-main)'
               }}
             />
           </div>
@@ -65,8 +67,8 @@ const DataLoadPage: React.FC = () => {
             type="submit"
             disabled={!file || loading}
             style={{
-              backgroundColor: !file || loading ? '#cbd5e0' : '#3182ce',
-              color: 'white',
+              backgroundColor: !file || loading ? 'var(--text-muted)' : 'var(--primary)',
+              color: 'var(--primary-text)',
               border: 'none',
               padding: '12px 24px',
               borderRadius: '8px',
@@ -80,30 +82,30 @@ const DataLoadPage: React.FC = () => {
         </form>
 
         {error && (
-          <div style={{ marginTop: '20px', padding: '12px', backgroundColor: '#fff5f5', color: '#c53030', borderRadius: '8px', border: '1px solid #feb2b2' }}>
+          <div style={{ marginTop: '20px', padding: '12px', backgroundColor: 'var(--status-error-bg)', color: 'var(--status-error-text)', borderRadius: '8px', border: '1px solid var(--status-error-border)' }}>
             {error}
           </div>
         )}
 
         {result && (
           <div style={{ marginTop: '24px' }}>
-            <h4 style={{ marginBottom: '16px' }}>Upload Summary</h4>
+            <h4 style={{ marginBottom: '16px', color: 'var(--text-main)' }}>Upload Summary</h4>
             <div className="metrics-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-              <div className="card" style={{ padding: '16px', background: '#f0fff4', border: '1px solid #c6f6d5' }}>
-                <div style={{ fontSize: '0.8rem', color: '#2f855a' }}>LOADED</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{result.loaded}</div>
+              <div className="card" style={{ padding: '16px', background: 'var(--status-success-bg)', border: '1px solid var(--status-success-border)' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--status-success-text)' }}>LOADED</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)' }}>{result.loaded}</div>
               </div>
-              <div className="card" style={{ padding: '16px', background: '#ebf8ff', border: '1px solid #bee3f8' }}>
-                <div style={{ fontSize: '0.8rem', color: '#2b6cb0' }}>UPDATED</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{result.updated}</div>
+              <div className="card" style={{ padding: '16px', background: 'var(--status-info-bg)', border: '1px solid var(--status-info-border)' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--status-info-text)' }}>UPDATED</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)' }}>{result.updated}</div>
               </div>
-              <div className="card" style={{ padding: '16px', background: '#fffaf0', border: '1px solid #feebc8' }}>
-                <div style={{ fontSize: '0.8rem', color: '#c05621' }}>SKIPPED</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{result.skipped}</div>
+              <div className="card" style={{ padding: '16px', background: 'var(--status-warning-bg)', border: '1px solid var(--status-warning-border)' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--status-warning-text)' }}>SKIPPED</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)' }}>{result.skipped}</div>
               </div>
-              <div className="card" style={{ padding: '16px', background: '#fff5f5', border: '1px solid #feb2b2' }}>
-                <div style={{ fontSize: '0.8rem', color: '#c53030' }}>ERRORS</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{result.errors}</div>
+              <div className="card" style={{ padding: '16px', background: 'var(--status-error-bg)', border: '1px solid var(--status-error-border)' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--status-error-text)' }}>ERRORS</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)' }}>{result.errors}</div>
               </div>
             </div>
           </div>

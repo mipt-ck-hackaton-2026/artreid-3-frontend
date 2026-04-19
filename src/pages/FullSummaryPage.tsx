@@ -23,7 +23,7 @@ const FullSummaryPage: React.FC = () => {
   }, []);
 
   if (loading) return <div className="page-header"><h2>Full Summary</h2><p>Loading analytics...</p></div>;
-  if (error) return <div className="page-header"><h2>Full Summary</h2><p style={{ color: 'red' }}>{error}</p></div>;
+  if (error) return <div className="page-header"><h2>Full Summary</h2><p style={{ color: 'var(--status-error-text)' }}>{error}</p></div>;
   if (!data) return null;
 
   return (

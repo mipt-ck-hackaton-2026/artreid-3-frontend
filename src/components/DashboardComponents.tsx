@@ -13,23 +13,23 @@ export const MetricCard: React.FC<{ title: string; metrics: MetricDetails }> = (
       <div className="metric-subtext">
         {metrics.met_count} of {metrics.total_orders} orders met SLA
       </div>
-      <div style={{ marginTop: '16px', height: '8px', background: '#edf2f7', borderRadius: '4px', overflow: 'hidden' }}>
+      <div style={{ marginTop: '16px', height: '8px', background: 'var(--hover-bg)', borderRadius: '4px', overflow: 'hidden' }}>
         <div 
           style={{ 
             width: `${metrics.met_percent}%`, 
             height: '100%', 
-            background: isHealthy ? '#48bb78' : '#f6e05e',
+            background: isHealthy ? 'var(--chart-success)' : 'var(--chart-warning)',
             transition: 'width 0.5s ease-out'
           }} 
         />
       </div>
       <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
         <div>
-          <span style={{ color: '#718096' }}>Avg:</span> 
+          <span style={{ color: 'var(--text-muted)' }}>Avg:</span> 
           <span style={{ fontWeight: 600, marginLeft: '4px' }}>{metrics.avg_minutes.toFixed(1)}m</span>
         </div>
         <div>
-          <span style={{ color: '#718096' }}>P90:</span> 
+          <span style={{ color: 'var(--text-muted)' }}>P90:</span> 
           <span style={{ fontWeight: 600, marginLeft: '4px' }}>{metrics.p90_minutes.toFixed(1)}m</span>
         </div>
       </div>
@@ -48,17 +48,24 @@ export const BreachDistributionChart: React.FC<{ metrics: MetricDetails }> = ({ 
 
   return (
     <div className="card" style={{ height: '300px' }}>
-      <h3 style={{ fontSize: '0.9rem', color: '#718096', marginBottom: '16px' }}>BREACH DISTRIBUTION ({metrics.breach_distribution.metadata.unit})</h3>
+      <h3 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '16px' }}>BREACH DISTRIBUTION ({metrics.breach_distribution.metadata.unit})</h3>
       <ResponsiveContainer width="100%" height="90%">
         <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="name" fontSize={12} />
-          <YAxis fontSize={12} />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" />
+          <XAxis dataKey="name" fontSize={12} stroke="var(--chart-axis)" />
+          <YAxis fontSize={12} stroke="var(--chart-axis)" />
           <Tooltip 
             formatter={(value: any) => [`${value} orders`, 'Count']}
-            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+            contentStyle={{ 
+              backgroundColor: 'var(--chart-tooltip-bg)', 
+              borderColor: 'var(--chart-tooltip-border)', 
+              borderRadius: '8px', 
+              color: 'var(--text-main)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)' 
+            }}
+            itemStyle={{ color: 'var(--text-main)' }}
           />
-          <Bar dataKey="count" fill="#fc8181" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="count" fill="var(--chart-error)" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -68,19 +75,26 @@ export const BreachDistributionChart: React.FC<{ metrics: MetricDetails }> = ({ 
 export const ComparisonChart: React.FC<{ title: string; data: { name: string; value: number }[] }> = ({ title, data }) => {
   return (
     <div className="card" style={{ height: '400px' }}>
-      <h3 style={{ fontSize: '0.9rem', color: '#718096', marginBottom: '24px' }}>{title}</h3>
+      <h3 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '24px' }}>{title}</h3>
       <ResponsiveContainer width="100%" height="90%">
         <BarChart data={data} layout="vertical">
-          <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+          <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border-color)" />
           <XAxis type="number" unit="%" hide />
-          <YAxis dataKey="name" type="category" width={100} fontSize={12} />
+          <YAxis dataKey="name" type="category" width={100} fontSize={12} stroke="var(--chart-axis)" />
           <Tooltip 
             formatter={(value: any) => [`${value.toFixed(1)}%`, 'SLA Met']}
-            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+            contentStyle={{ 
+              backgroundColor: 'var(--chart-tooltip-bg)', 
+              borderColor: 'var(--chart-tooltip-border)', 
+              borderRadius: '8px', 
+              color: 'var(--text-main)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)' 
+            }}
+            itemStyle={{ color: 'var(--text-main)' }}
           />
           <Bar dataKey="value" radius={[0, 4, 4, 0]}>
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.value >= 80 ? '#48bb78' : '#f6e05e'} />
+              <Cell key={`cell-${index}`} fill={entry.value >= 80 ? 'var(--chart-success)' : 'var(--chart-warning)'} />
             ))}
           </Bar>
         </BarChart>
