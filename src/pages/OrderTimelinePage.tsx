@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { orderApi } from '../api';
+import { autocompleteApi, orderApi } from '../api';
 import type { OrderTimelineResponseDTO, ErrorResponse } from '../api/types';
 import '../components/Layout.css';
+import AutocompleteInput from '../components/AutocompleteInput';
 
 const OrderTimelinePage: React.FC = () => {
   const [leadId, setLeadId] = useState('');
@@ -10,8 +11,8 @@ const OrderTimelinePage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTimeline = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const fetchTimeline = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!leadId) return;
 
     setLoading(true);
@@ -44,21 +45,13 @@ const OrderTimelinePage: React.FC = () => {
       </header>
 
       <div className="card" style={{ maxWidth: '600px', marginBottom: '40px' }}>
-        <form onSubmit={fetchTimeline} style={{ display: 'flex', gap: '12px' }}>
-          <input
-            type="text"
-            placeholder="Enter Lead ID (e.g., 1234567)"
+        <form onSubmit={fetchTimeline} style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
+          <AutocompleteInput 
+            label="Lead ID"
+            placeholder="Search lead..."
             value={leadId}
-            onChange={(e) => setLeadId(e.target.value)}
-            style={{
-              flexGrow: 1,
-              padding: '12px',
-              border: '1px solid var(--border-color)',
-              borderRadius: '8px',
-              fontSize: '1rem',
-              backgroundColor: 'var(--bg-card)',
-              color: 'var(--text-main)'
-            }}
+            onChange={val => setLeadId(val)}
+            fetchOptions={(q, signal) => autocompleteApi.getLeads(q, 10, signal)}
           />
           <button
             type="submit"
@@ -70,7 +63,8 @@ const OrderTimelinePage: React.FC = () => {
               padding: '0 24px',
               borderRadius: '8px',
               fontWeight: 600,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              height: '38px'
             }}
           >
             {loading ? 'Searching...' : 'Analyze'}

@@ -26,7 +26,7 @@ vi.mock('../api', () => ({
 describe('OrderTimelinePage', () => {
   it('should render search form', () => {
     render(<OrderTimelinePage />)
-    expect(screen.getByPlaceholderText('Enter Lead ID (e.g., 1234567)')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Search lead...')).toBeInTheDocument()
     expect(screen.getByText('Analyze')).toBeInTheDocument()
   })
 
@@ -60,7 +60,7 @@ describe('OrderTimelinePage', () => {
     vi.mocked(orderApi.getTimeline).mockResolvedValue(mockData as AxiosResponse<OrderTimelineResponseDTO>)
 
     render(<OrderTimelinePage />)
-    const input = screen.getByPlaceholderText('Enter Lead ID (e.g., 1234567)')
+    const input = screen.getByPlaceholderText('Search lead...')
     fireEvent.change(input, { target: { value: '123456' } })
     fireEvent.click(screen.getByText('Analyze'))
 
@@ -83,7 +83,7 @@ describe('OrderTimelinePage', () => {
     vi.mocked(orderApi.getTimeline).mockRejectedValue(mockError)
 
     render(<OrderTimelinePage />)
-    const input = screen.getByPlaceholderText('Enter Lead ID (e.g., 1234567)')
+    const input = screen.getByPlaceholderText('Search lead...')
     fireEvent.change(input, { target: { value: '999999' } })
     fireEvent.click(screen.getByText('Analyze'))
 

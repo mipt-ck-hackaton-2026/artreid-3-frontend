@@ -25,8 +25,12 @@ export const dataApi = {
 };
 
 export const slaApi = {
-  getFullSummary: (dateFrom?: string, dateTo?: string) =>
-    api.get<FullSummaryResponseDTO>('/api/sla/full/summary', { params: { dateFrom, dateTo } }),
+  getFullSummary: (params: {
+    dateFrom?: string;
+    dateTo?: string;
+    managerId?: string;
+    qualification?: string;
+  }) => api.get<FullSummaryResponseDTO>('/api/sla/full/summary', { params }),
 
   getDeliverySummary: (params: {
     dateFrom?: string;
@@ -59,6 +63,26 @@ export const slaApi = {
   }) => api.get<ManagerB2CSlaResponseDTO>('/api/sla/b2c/by-manager', { params }),
 
   getConfig: () => api.get('/api/sla/config'),
+};
+
+export const autocompleteApi = {
+  getQualifications: (query?: string, limit?: number, signal?: AbortSignal) =>
+    api.get<string[]>('/api/autocomplete/qualifications', { params: { query, limit }, signal }),
+  
+  getManagers: (query?: string, limit?: number, signal?: AbortSignal) =>
+    api.get<string[]>('/api/autocomplete/managers', { params: { query, limit }, signal }),
+  
+  getLeads: (query?: string, limit?: number, signal?: AbortSignal) =>
+    api.get<string[]>('/api/autocomplete/leads', { params: { query, limit }, signal }),
+  
+  getDeliveryServices: (query?: string, limit?: number, signal?: AbortSignal) =>
+    api.get<string[]>('/api/autocomplete/delivery-services', { params: { query, limit }, signal }),
+  
+  getDeliveryManagers: (query?: string, limit?: number, signal?: AbortSignal) =>
+    api.get<string[]>('/api/autocomplete/delivery-managers', { params: { query, limit }, signal }),
+  
+  getCities: (query?: string, limit?: number, signal?: AbortSignal) =>
+    api.get<string[]>('/api/autocomplete/cities', { params: { query, limit }, signal }),
 };
 
 export const orderApi = {

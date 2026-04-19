@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { slaApi } from '../api';
+import { slaApi, autocompleteApi } from '../api';
 import type { B2CSummaryResponseDTO, ManagerB2CSlaResponseDTO } from '../api/types';
 import { MetricCard, ComparisonChart } from '../components/DashboardComponents';
+import AutocompleteInput from '../components/AutocompleteInput';
 
 const B2CSummaryPage: React.FC = () => {
   const [summary, setSummary] = useState<B2CSummaryResponseDTO | null>(null);
@@ -83,24 +84,20 @@ const B2CSummaryPage: React.FC = () => {
             onChange={e => setFilters(f => ({ ...f, dateTo: e.target.value }))} 
           />
         </div>
-        <div className="filter-group">
-          <label>Manager ID</label>
-          <input 
-            type="text" 
-            placeholder="e.g. 12345"
-            value={filters.managerId} 
-            onChange={e => setFilters(f => ({ ...f, managerId: e.target.value }))} 
-          />
-        </div>
-        <div className="filter-group">
-          <label>Qualification</label>
-          <input 
-            type="text" 
-            placeholder="e.g. High"
-            value={filters.qualification} 
-            onChange={e => setFilters(f => ({ ...f, qualification: e.target.value }))} 
-          />
-        </div>
+        <AutocompleteInput 
+          label="Manager ID"
+          placeholder="Search manager..."
+          value={filters.managerId}
+          onChange={val => setFilters(f => ({ ...f, managerId: val }))}
+          fetchOptions={(q, signal) => autocompleteApi.getManagers(q, 10, signal)}
+        />
+        <AutocompleteInput 
+          label="Qualification"
+          placeholder="Search qualification..."
+          value={filters.qualification}
+          onChange={val => setFilters(f => ({ ...f, qualification: val }))}
+          fetchOptions={(q, signal) => autocompleteApi.getQualifications(q, 10, signal)}
+        />
         <button type="submit" className="btn-apply" disabled={loading}>
           {loading ? 'Loading...' : 'Apply'}
         </button>

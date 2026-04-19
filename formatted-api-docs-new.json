@@ -1,0 +1,1498 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "OpenAPI definition",
+        "version": "v0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Generated server url"
+        }
+    ],
+    "paths": {
+        "/api/data/load": {
+            "post": {
+                "tags": [
+                    "data-load-controller"
+                ],
+                "operationId": "load",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "required": [
+                                    "file"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DataLoadResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sla/full/summary": {
+            "get": {
+                "tags": [
+                    "sla-analytics-controller"
+                ],
+                "operationId": "getFullSummary",
+                "parameters": [
+                    {
+                        "name": "dateFrom",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "dateTo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "managerId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "qualification",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FullSummaryResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sla/delivery/summary": {
+            "get": {
+                "tags": [
+                    "sla-analytics-controller"
+                ],
+                "operationId": "getDeliverySummary",
+                "parameters": [
+                    {
+                        "name": "dateFrom",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "dateTo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "managerId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "qualification",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "deliveryService",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeliverySummaryResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sla/delivery/by-manager": {
+            "get": {
+                "tags": [
+                    "sla-analytics-controller"
+                ],
+                "operationId": "getDeliverySlaByManager",
+                "parameters": [
+                    {
+                        "name": "dateFrom",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "dateTo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "managerId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "qualification",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "deliveryService",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ManagerDeliverySlaResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sla/config": {
+            "get": {
+                "tags": [
+                    "sla-config-controller"
+                ],
+                "operationId": "getConfig",
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SlaConfigDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sla/b2c/summary": {
+            "get": {
+                "tags": [
+                    "sla-analytics-controller"
+                ],
+                "operationId": "getB2CSummary",
+                "parameters": [
+                    {
+                        "name": "dateFrom",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "dateTo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "managerId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "qualification",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/B2CSummaryResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sla/b2c/by-manager": {
+            "get": {
+                "tags": [
+                    "sla-analytics-controller"
+                ],
+                "operationId": "getB2CSlaByManager",
+                "parameters": [
+                    {
+                        "name": "dateFrom",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "dateTo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "managerId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "qualification",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ManagerB2CSlaResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders/{leadId}/timeline": {
+            "get": {
+                "tags": [
+                    "order-timeline-controller"
+                ],
+                "operationId": "getOrderTimeline",
+                "parameters": [
+                    {
+                        "name": "leadId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderTimelineResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/health": {
+            "get": {
+                "tags": [
+                    "health-controller"
+                ],
+                "operationId": "health",
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autocomplete/qualifications": {
+            "get": {
+                "tags": [
+                    "autocomplete-controller"
+                ],
+                "operationId": "getQualifications",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autocomplete/managers": {
+            "get": {
+                "tags": [
+                    "autocomplete-controller"
+                ],
+                "operationId": "getManagers",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autocomplete/leads": {
+            "get": {
+                "tags": [
+                    "autocomplete-controller"
+                ],
+                "operationId": "getLeads",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autocomplete/delivery-services": {
+            "get": {
+                "tags": [
+                    "autocomplete-controller"
+                ],
+                "operationId": "getDeliveryServices",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autocomplete/delivery-managers": {
+            "get": {
+                "tags": [
+                    "autocomplete-controller"
+                ],
+                "operationId": "getDeliveryManagers",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autocomplete/cities": {
+            "get": {
+                "tags": [
+                    "autocomplete-controller"
+                ],
+                "operationId": "getCities",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "error": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "path": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DataLoadResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "loaded": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "updated": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "skipped": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "errors": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "B2CMetricDetails": {
+                "type": "object",
+                "properties": {
+                    "threshold_minutes": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "total_orders": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "met_count": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "met_percent": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "breach_count": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "breach_percent": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "avg_minutes": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "median_minutes": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "p90_minutes": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "breach_distribution": {
+                        "$ref": "#/components/schemas/BreachDistributionDTO"
+                    }
+                }
+            },
+            "BreachDistributionDTO": {
+                "type": "object",
+                "properties": {
+                    "metadata": {
+                        "$ref": "#/components/schemas/Metadata"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Item"
+                        }
+                    }
+                }
+            },
+            "FullSummaryMetrics": {
+                "type": "object",
+                "properties": {
+                    "full_total": {
+                        "$ref": "#/components/schemas/B2CMetricDetails"
+                    }
+                }
+            },
+            "FullSummaryResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "period": {
+                        "$ref": "#/components/schemas/Period"
+                    },
+                    "pipeline": {
+                        "type": "string"
+                    },
+                    "metrics": {
+                        "$ref": "#/components/schemas/FullSummaryMetrics"
+                    }
+                }
+            },
+            "Item": {
+                "type": "object",
+                "properties": {
+                    "sort_order": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "min_bound": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "max_bound": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "ratio": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                }
+            },
+            "Metadata": {
+                "type": "object",
+                "properties": {
+                    "unit": {
+                        "type": "string"
+                    },
+                    "total_count": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "Period": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "string"
+                    },
+                    "to": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DeliverySummaryMetrics": {
+                "type": "object",
+                "properties": {
+                    "sla4_to_pvz": {
+                        "$ref": "#/components/schemas/MetricDetails"
+                    },
+                    "sla5_at_pvz": {
+                        "$ref": "#/components/schemas/MetricDetails"
+                    },
+                    "delivery_total": {
+                        "$ref": "#/components/schemas/MetricDetails"
+                    }
+                }
+            },
+            "DeliverySummaryResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "period": {
+                        "$ref": "#/components/schemas/Period"
+                    },
+                    "pipeline": {
+                        "type": "string"
+                    },
+                    "metrics": {
+                        "$ref": "#/components/schemas/DeliverySummaryMetrics"
+                    }
+                }
+            },
+            "MetricDetails": {
+                "type": "object",
+                "properties": {
+                    "threshold_minutes": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "total_orders": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "met_count": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "met_percent": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "breach_count": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "breach_percent": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "avg_minutes": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "median_minutes": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "p90_minutes": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "breach_distribution": {
+                        "$ref": "#/components/schemas/BreachDistributionDTO"
+                    }
+                }
+            },
+            "DeliveryMetrics": {
+                "type": "object",
+                "properties": {
+                    "sla4_to_pvz": {
+                        "$ref": "#/components/schemas/MetricDetails"
+                    },
+                    "sla5_at_pvz": {
+                        "$ref": "#/components/schemas/MetricDetails"
+                    },
+                    "delivery_total": {
+                        "$ref": "#/components/schemas/MetricDetails"
+                    }
+                }
+            },
+            "ManagerDeliveryData": {
+                "type": "object",
+                "properties": {
+                    "manager_id": {
+                        "type": "string"
+                    },
+                    "metrics": {
+                        "$ref": "#/components/schemas/DeliveryMetrics"
+                    }
+                }
+            },
+            "ManagerDeliverySlaResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "period": {
+                        "$ref": "#/components/schemas/Period"
+                    },
+                    "pipeline": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ManagerDeliveryData"
+                        }
+                    }
+                }
+            },
+            "B2cDTO": {
+                "type": "object",
+                "properties": {
+                    "reaction_minutes": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "to_assembly_hours": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "assembly_to_delivery_days": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "total_days": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "BreachBucketsDTO": {
+                "type": "object",
+                "properties": {
+                    "short_minutes": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "days": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                }
+            },
+            "DeliveryDTO": {
+                "type": "object",
+                "properties": {
+                    "to_pvz_days": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pvz_storage_days": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "total_days": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "SlaConfigDTO": {
+                "type": "object",
+                "properties": {
+                    "b2c": {
+                        "$ref": "#/components/schemas/B2cDTO"
+                    },
+                    "delivery": {
+                        "$ref": "#/components/schemas/DeliveryDTO"
+                    },
+                    "full_cycle_days": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "breach_buckets": {
+                        "$ref": "#/components/schemas/BreachBucketsDTO"
+                    }
+                }
+            },
+            "B2CSummaryMetrics": {
+                "type": "object",
+                "properties": {
+                    "sla1_reaction": {
+                        "$ref": "#/components/schemas/B2CMetricDetails"
+                    },
+                    "sla2_to_assembly": {
+                        "$ref": "#/components/schemas/B2CMetricDetails"
+                    },
+                    "sla3_to_delivery": {
+                        "$ref": "#/components/schemas/B2CMetricDetails"
+                    },
+                    "b2c_total": {
+                        "$ref": "#/components/schemas/B2CMetricDetails"
+                    }
+                }
+            },
+            "B2CSummaryResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "period": {
+                        "$ref": "#/components/schemas/Period"
+                    },
+                    "pipeline": {
+                        "type": "string"
+                    },
+                    "metrics": {
+                        "$ref": "#/components/schemas/B2CSummaryMetrics"
+                    }
+                }
+            },
+            "B2CMetrics": {
+                "type": "object",
+                "properties": {
+                    "sla1_reaction": {
+                        "$ref": "#/components/schemas/B2CMetricDetails"
+                    },
+                    "sla2_to_assembly": {
+                        "$ref": "#/components/schemas/B2CMetricDetails"
+                    },
+                    "sla3_to_delivery": {
+                        "$ref": "#/components/schemas/B2CMetricDetails"
+                    },
+                    "b2c_total": {
+                        "$ref": "#/components/schemas/B2CMetricDetails"
+                    }
+                }
+            },
+            "ManagerB2CData": {
+                "type": "object",
+                "properties": {
+                    "manager_id": {
+                        "type": "string"
+                    },
+                    "metrics": {
+                        "$ref": "#/components/schemas/B2CMetrics"
+                    }
+                }
+            },
+            "ManagerB2CSlaResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "period": {
+                        "$ref": "#/components/schemas/Period"
+                    },
+                    "pipeline": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ManagerB2CData"
+                        }
+                    }
+                }
+            },
+            "OrderTimelineResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "period": {
+                        "$ref": "#/components/schemas/PeriodDto"
+                    },
+                    "pipeline": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderTimelineStepDTO"
+                        }
+                    }
+                }
+            },
+            "OrderTimelineStepDTO": {
+                "type": "object",
+                "properties": {
+                    "stage": {
+                        "type": "string",
+                        "enum": [
+                            "CREATED",
+                            "CLOSED",
+                            "TO_ASSEMBLY",
+                            "SALE",
+                            "HANDED_TO_DELIVERY",
+                            "ISSUED_OR_PVZ",
+                            "RECEIVED",
+                            "REJECTED",
+                            "RETURNED"
+                        ]
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "durationMinutes": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "durationDays": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "slaViolated": {
+                        "type": "boolean"
+                    },
+                    "slaThreshold": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PeriodDto": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "string"
+                    },
+                    "to": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HealthResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

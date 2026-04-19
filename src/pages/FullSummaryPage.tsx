@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { slaApi } from '../api';
+import { slaApi, autocompleteApi } from '../api';
 import type { FullSummaryResponseDTO } from '../api/types';
 import { MetricCard, BreachDistributionChart } from '../components/DashboardComponents';
+import AutocompleteInput from '../components/AutocompleteInput';
 
 const FullSummaryPage: React.FC = () => {
   const [data, setData] = useState<FullSummaryResponseDTO | null>(null);
@@ -9,14 +10,21 @@ const FullSummaryPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     dateFrom: '',
-    dateTo: ''
+    dateTo: '',
+    managerId: '',
+    qualification: ''
   });
   const [activeFilters, setActiveFilters] = useState(filters);
 
   useEffect(() => {
     let ignore = false;
-    
-    slaApi.getFullSummary(activeFilters.dateFrom || undefined, activeFilters.dateTo || undefined)
+
+    slaApi.getFullSummary({
+      dateFrom: activeFilters.dateFrom || undefined,
+      dateTo: activeFilters.dateTo || undefined,
+      managerId: activeFilters.managerId || undefined,
+      qualification: activeFilters.qualification || undefined
+    })
       .then(response => {
         if (!ignore) {
           setData(response.data);
@@ -41,6 +49,7 @@ const FullSummaryPage: React.FC = () => {
     setLoading(true);
     setActiveFilters({ ...filters });
   };
+
 
   if (loading && !data) return <div className="page-header"><h2>Full Summary</h2><p>Loading analytics...</p></div>;
 
@@ -67,6 +76,20 @@ const FullSummaryPage: React.FC = () => {
             onChange={e => setFilters(f => ({ ...f, dateTo: e.target.value }))} 
           />
         </div>
+        <AutocompleteInput 
+          label="Manager ID"
+          placeholder="Search manager..."
+          value={filters.managerId}
+          onChange={val => setFilters(f => ({ ...f, managerId: val }))}
+          fetchOptions={(q, signal) => autocompleteApi.getManagers(q, 10, signal)}
+        />
+        <AutocompleteInput 
+          label="Qualification"
+          placeholder="Search qualification..."
+          value={filters.qualification}
+          onChange={val => setFilters(f => ({ ...f, qualification: val }))}
+          fetchOptions={(q, signal) => autocompleteApi.getQualifications(q, 10, signal)}
+        />
         <button type="submit" className="btn-apply" disabled={loading}>
           {loading ? 'Loading...' : 'Apply'}
         </button>

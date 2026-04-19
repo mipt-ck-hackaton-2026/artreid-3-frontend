@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { slaApi } from '../api';
+import { slaApi, autocompleteApi } from '../api';
 import type { DeliverySummaryResponseDTO, ManagerDeliverySlaResponseDTO } from '../api/types';
 import { MetricCard, ComparisonChart } from '../components/DashboardComponents';
+import AutocompleteInput from '../components/AutocompleteInput';
 
 const DeliverySummaryPage: React.FC = () => {
   const [summary, setSummary] = useState<DeliverySummaryResponseDTO | null>(null);
@@ -85,33 +86,27 @@ const DeliverySummaryPage: React.FC = () => {
             onChange={e => setFilters(f => ({ ...f, dateTo: e.target.value }))} 
           />
         </div>
-        <div className="filter-group">
-          <label>Manager ID</label>
-          <input 
-            type="text" 
-            placeholder="e.g. 12345"
-            value={filters.managerId} 
-            onChange={e => setFilters(f => ({ ...f, managerId: e.target.value }))} 
-          />
-        </div>
-        <div className="filter-group">
-          <label>Qualification</label>
-          <input 
-            type="text" 
-            placeholder="e.g. High"
-            value={filters.qualification} 
-            onChange={e => setFilters(f => ({ ...f, qualification: e.target.value }))} 
-          />
-        </div>
-        <div className="filter-group">
-          <label>Delivery Service</label>
-          <input 
-            type="text" 
-            placeholder="e.g. SDEK"
-            value={filters.deliveryService} 
-            onChange={e => setFilters(f => ({ ...f, deliveryService: e.target.value }))} 
-          />
-        </div>
+        <AutocompleteInput 
+          label="Manager ID"
+          placeholder="Search manager..."
+          value={filters.managerId}
+          onChange={val => setFilters(f => ({ ...f, managerId: val }))}
+          fetchOptions={(q, signal) => autocompleteApi.getDeliveryManagers(q, 10, signal)}
+        />
+        <AutocompleteInput 
+          label="Qualification"
+          placeholder="Search qualification..."
+          value={filters.qualification}
+          onChange={val => setFilters(f => ({ ...f, qualification: val }))}
+          fetchOptions={(q, signal) => autocompleteApi.getQualifications(q, 10, signal)}
+        />
+        <AutocompleteInput 
+          label="Delivery Service"
+          placeholder="Search service..."
+          value={filters.deliveryService}
+          onChange={val => setFilters(f => ({ ...f, deliveryService: val }))}
+          fetchOptions={(q, signal) => autocompleteApi.getDeliveryServices(q, 10, signal)}
+        />
         <button type="submit" className="btn-apply" disabled={loading}>
           {loading ? 'Loading...' : 'Apply'}
         </button>

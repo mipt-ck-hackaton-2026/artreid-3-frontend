@@ -277,7 +277,50 @@ body {
   background-color: var(--primary-hover);
 }
 
-.btn-apply:disabled {
-  background-color: var(--text-muted);
-  cursor: not-allowed;
+/* Autocomplete */
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 4px;
+  list-style: none;
+  padding: 0;
+}
+
+.autocomplete-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  transition: background-color 0.2s;
+}
+
+.autocomplete-item:hover {
+  background-color: var(--hover-bg);
+}
+
+.autocomplete-loading {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.autocomplete-no-results {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
