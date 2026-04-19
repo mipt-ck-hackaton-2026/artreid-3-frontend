@@ -1,7 +1,14 @@
 {
-  "name": "artreid-3-frontend",
-  "private": true,
+  "name": "@mipt-ck-hackaton-2026/artreid-3-frontend",
+  "private": false,
   "version": "0.0.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mipt-ck-hackaton-2026/artreid-3-frontend.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
